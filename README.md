@@ -1,13 +1,11 @@
 parana/tomcat-xe-ubuntu
 ====================
 
-Based on parana/web-xe-ubuntu Image
-
 Oracle Java JDK 8 plus Oracle Express Edition 11g Release 2 on Ubuntu 14.04.1 LTS
 
 This **Dockerfile** is a [trusted build](https://registry.hub.docker.com/u/parana/tomcat-xe-ubuntu/) of [Docker Registry](https://registry.hub.docker.com/).
 
-### Based on: wnameless/oracle-xe-11g 
+### Based on parana/web-xe-ubuntu Image
 
 ### Installation
 
@@ -23,7 +21,7 @@ docker-ip() {
 } 
 ```
 
-Run as a daemon with 8080, 22 and 1521 ports opened, setting the hostname to db-server use the command:
+Run as a daemon with 8080, 22 and 1521 ports opened and mapped, setting the hostname to db-server use the command:
 
 ```
 docker run -d -h tomcat-server -p 1443:8080 -p 4422:22 -p 1521:1521 --name mytomcat parana/tomcat-xe-ubuntu
@@ -84,6 +82,12 @@ To see mytomcat container details use:
 docker ps | grep mytomcat 
 ```
 
+To remove an old container and start a new one use:
+
+```
+docker rm mytomcat 2> /dev/null  ; docker run -d -h tomcat-server -p 1443:8080 -p 44222:22 -p 1521:1521 --name mytomcat parana/tomcat-xe-ubuntu 
+```
+
 Another usefull shell. 
 
 Save this on your `~/bin/` directory as `docker-clean` file:
@@ -121,3 +125,5 @@ case $1 in
 esac
 
 ```
+
+Chears !
