@@ -60,5 +60,10 @@ RUN chmod 777 /bin/start-xe-and-jee.sh
 RUN echo '---- cat /bin/start-xe-and-jee.sh  ----' 
 RUN cat /bin/start-xe-and-jee.sh
 
-EXPOSE 8080
+# Default port 8080 conflits with Apex
+RUN sed -i -E "s/8080/1443/g" $CATALINA_HOME/conf/server.xml
+RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' 
+RUN cat $CATALINA_HOME/conf/server.xml
+
+EXPOSE 1443
 CMD ["sh", "/bin/start-xe-and-jee.sh", "Iniciando"]
