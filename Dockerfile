@@ -51,19 +51,29 @@ RUN echo '---- cat /bin/start-oracle  ----'
 RUN cat /bin/start-oracle
 RUN echo '--------------------------------'
 RUN echo '---- building start-oracle shell   ----' 
-RUN echo '/bin/start-oracle' > /bin/start-xe-and-jee.sh
-RUN echo 'sleep 15' >> /bin/start-xe-and-jee.sh
 # doing : CMD ["catalina.sh", "run"]
+RUN echo "#" > /bin/start-xe-and-jee.sh
+RUN echo "#" >> /bin/start-xe-and-jee.sh
+RUN echo "#" >> /bin/start-xe-and-jee.sh
+RUN echo "echo I am going to RUN Tomcat 8 Application" >> /bin/start-xe-and-jee.sh
+RUN echo 'echo `pwd` ' >> /bin/start-xe-and-jee.sh
+RUN echo "echo Starting Tomcat 8" >> /bin/start-xe-and-jee.sh
 RUN echo 'catalina.sh start' >> /bin/start-xe-and-jee.sh
-RUN echo 'echo "$1 $2 $3 $4 $5" >> $SOMA_HOME/logs/soma.log' >> /bin/start-xe-and-jee.sh
+RUN echo '/bin/start-oracle' >> /bin/start-xe-and-jee.sh
+# RUN echo 'sleep 15' >> /bin/start-xe-and-jee.sh
+# RUN echo 'echo "$1 $2 $3 $4 $5" >> /usr/local/soma/logs/soma.log' >> /bin/start-xe-and-jee.sh
 RUN chmod 777 /bin/start-xe-and-jee.sh
 RUN echo '---- cat /bin/start-xe-and-jee.sh  ----' 
 RUN cat /bin/start-xe-and-jee.sh
 
-# Default port 8080 conflits with Apex
+# Tomcat 8 Default port 8080 conflits with Apex
 RUN sed -i -E "s/8080/1443/g" $CATALINA_HOME/conf/server.xml
 RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' 
 RUN cat $CATALINA_HOME/conf/server.xml
 
 EXPOSE 1443
+EXPOSE 8080
+EXPOSE 1521
+EXPOSE 22
+
 CMD ["sh", "/bin/start-xe-and-jee.sh", "Iniciando"]
