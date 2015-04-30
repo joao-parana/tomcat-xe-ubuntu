@@ -6,6 +6,7 @@ MAINTAINER João Antonio Ferreira "joao.parana@gmail.com"
 
 # Install tomcat8
 ENV CATALINA_HOME /usr/local/tomcat
+ENV CATALINA_BASE /usr/local/tomcat
 ENV SOMA_HOME     /usr/local/soma
 ENV ORACLE_HOME   /u01/app/oracle/product/11.2.0/xe
 ENV ORACLE_SID    XE
@@ -49,7 +50,6 @@ RUN ls -lat /bin
 RUN echo '---- cat /bin/start-oracle  ----' 
 RUN cat /bin/start-oracle
 RUN echo '--------------------------------'
-
 RUN echo '---- building start-oracle shell   ----' 
 RUN echo '/bin/start-oracle' > /bin/start-xe-and-jee.sh
 RUN echo 'sleep 15' >> /bin/start-xe-and-jee.sh
