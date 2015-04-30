@@ -24,7 +24,7 @@ docker-ip() {
 Run as a daemon with 8080, 22 and 1521 ports opened and mapped, setting the hostname to db-server use the command:
 
 ```
-docker run -d -h tomcat-server -p 1443:8080 -p 4422:22 -p 1521:1521 --name mytomcat parana/tomcat-xe-ubuntu
+docker run -d -h db-server -p 1443:8080 -p 4422:22 -p 1521:1521 --name mytomcat parana/tomcat-xe-ubuntu
 ```
 
 Connect database with following setting:
@@ -85,9 +85,13 @@ docker ps | grep mytomcat
 To remove an old container and start a new one use:
 
 ```
-docker rm mytomcat 2> /dev/null  ; docker run -d -h tomcat-server -p 1443:8080 -p 44222:22 -p 1521:1521 --name mytomcat parana/tomcat-xe-ubuntu 
+docker stop mytomcat 2> /dev/null  ; docker rm mytomcat 2> /dev/null  ; docker run -d -h db-server -p 1443:8080 -p 44222:22 -p 1521:1521 --name mytomcat parana/tomcat-xe-ubuntu 
 ```
+Or defining an alias:
 
+```
+alias trun='docker stop mytomcat 2> /dev/null  ; docker rm mytomcat 2> /dev/null  ; docker run -d -h db-server -p 1443:8080 -p 44222:22 -p 1521:1521 --name mytomcat parana/tomcat-xe-ubuntu'
+```
 Another usefull shell. 
 
 Save this on your `~/bin/` directory as `docker-clean` file:

@@ -6,8 +6,15 @@ MAINTAINER João Antonio Ferreira "joao.parana@gmail.com"
 
 # Install tomcat8
 ENV CATALINA_HOME /usr/local/tomcat
-ENV PATH $CATALINA_HOME/bin:$PATH
+ENV SOMA_HOME     /usr/local/soma
+ENV ORACLE_HOME   /u01/app/oracle/product/11.2.0/xe
+ENV ORACLE_SID    XE
+
+ENV PATH $SOMA_HOME/bin:$ORACLE_HOME/bin:$CATALINA_HOME/bin:$PATH
+
 RUN mkdir -p "$CATALINA_HOME"
+RUN mkdir -p "$SOMA_HOME"
+RUN mkdir -p "$SOMA_HOME/logs"
 WORKDIR $CATALINA_HOME
 
 # see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
@@ -37,5 +44,21 @@ RUN set -x \
   && rm bin/*.bat \
   && rm tomcat.tar.gz*
 
+RUN echo '---- ls -lat /bin/start-oracle  ----' 
+RUN ls -lat /bin
+RUN echo '---- cat /bin/start-oracle  ----' 
+RUN cat /bin/start-oracle
+RUN echo '--------------------------------'
+
+RUN echo '---- building start-oracle shell   ----' 
+RUN echo '/bin/start-oracle' > /bin/start-xe-and-jee.sh
+RUN echo 'sleep 15' >> /bin/start-xe-and-jee.sh
+# doing : CMD ["catalina.sh", "run"]
+RUN echo 'catalina.sh start' >> /bin/start-xe-and-jee.sh
+RUN echo 'echo "$1 $2 $3 $4 $5" >> $SOMA_HOME/logs/soma.log' >> /bin/start-xe-and-jee.sh
+RUN chmod 777 /bin/start-xe-and-jee.sh
+RUN echo '---- cat /bin/start-xe-and-jee.sh  ----' 
+RUN cat /bin/start-xe-and-jee.sh
+
 EXPOSE 8080
-CMD ["catalina.sh", "run"]
+CMD ["sh", "/bin/start-xe-and-jee.sh", "Iniciando"]
