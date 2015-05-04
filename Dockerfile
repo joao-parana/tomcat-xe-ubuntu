@@ -16,6 +16,7 @@ ENV PATH $SOMA_HOME/bin:$ORACLE_HOME/bin:$CATALINA_HOME/bin:$PATH
 RUN mkdir -p "$CATALINA_HOME"
 RUN mkdir -p "$SOMA_HOME"
 RUN mkdir -p "$SOMA_HOME/logs"
+
 WORKDIR $CATALINA_HOME
 
 # see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
@@ -45,8 +46,26 @@ RUN set -x \
   && rm bin/*.bat \
   && rm tomcat.tar.gz*
 
+RUN echo 'SOMA_JDBC_USER=soma' >  $CATALINA_HOME/bin/setenv.sh
+RUN echo 'SOMA_JDBC_PASS=soma' >> $CATALINA_HOME/bin/setenv.sh
+RUN echo 'SOMA_JPA_LOG_FILE=$SOMA_HOME/logs/eclipselink.log' >> $CATALINA_HOME/bin/setenv.sh
+RUN echo '#' >> $CATALINA_HOME/bin/setenv.sh
+RUN echo '- - - - - - - - - - - - - -- - - - ' 
+RUN cat  $CATALINA_HOME/bin/setenv.sh
+RUN chmod a+rx $CATALINA_HOME/bin/setenv.sh
+RUN mkdir -p $CATALINA_HOME/shared
+
+# catalina.properties : na propriedade "common.loader" foi incluido no final 
+# da linha o conteúdo abaixo:
+#     ,"${catalina.base}/shared","${catalina.base}/shared/*.jar"
+# Agora só precisamos copiar o arquivo pro lugar correto
+ADD tomcat/conf/catalina.properties $CATALINA_HOME/conf/catalina.properties
+RUN ls -lat $CATALINA_HOME/conf
+RUN grep common.loader $CATALINA_HOME/conf/catalina.properties
+RUN echo 'É  necessário executar esse contêiner assim : docker run -d -h db-server -v ~/dev/shared:/usr/local/tomcat/shared  ... '
+
 RUN echo '---- ls -lat /bin/start-oracle  ----' 
-RUN ls -lat /bin
+RUN ls -lat /bin | head
 RUN echo '---- cat /bin/start-oracle  ----' 
 RUN cat /bin/start-oracle
 RUN echo '--------------------------------'
@@ -61,13 +80,15 @@ RUN echo "echo Starting Tomcat 8" >> /bin/start-xe-and-jee.sh
 RUN echo 'catalina.sh start' >> /bin/start-xe-and-jee.sh
 RUN echo '/bin/start-oracle' >> /bin/start-xe-and-jee.sh
 # RUN echo 'sleep 15' >> /bin/start-xe-and-jee.sh
-# RUN echo 'echo "$1 $2 $3 $4 $5" >> /usr/local/soma/logs/soma.log' >> /bin/start-xe-and-jee.sh
+# RUN echo 'echo "$1 $2 $3 $4 $5" >> $SOMA_HOME/logs/soma.log' >> /bin/start-xe-and-jee.sh
 RUN chmod 777 /bin/start-xe-and-jee.sh
 RUN echo '---- cat /bin/start-xe-and-jee.sh  ----' 
 RUN cat /bin/start-xe-and-jee.sh
 
 # Tomcat 8 Default port 8080 conflits with Apex
 RUN sed -i -E "s/8080/1443/g" $CATALINA_HOME/conf/server.xml
+ADD tomcat/conf/server.xml $CATALINA_HOME/conf/server.xml
+RUN grep Listener $CATALINA_HOME/conf/server.xml
 RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' 
 RUN cat $CATALINA_HOME/conf/server.xml
 
