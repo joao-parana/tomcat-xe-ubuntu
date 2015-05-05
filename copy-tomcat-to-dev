@@ -1,0 +1,5 @@
+cd tomcat
+cp conf/* ~/dev/conf/
+cp -R webapps/* ~/dev/webapps/
+cd ..
+find ~/dev
