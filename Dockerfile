@@ -96,8 +96,8 @@ RUN cat /bin/start-xe-and-jee.sh
 
 # Tomcat 8 Default port 8080 conflits with Apex
 RUN sed -i -E "s/8080/1443/g" $CATALINA_HOME/conf/server.xml
-ADD tomcat/conf/server.xml $CATALINA_HOME/conf/server.xml
-RUN grep Listener $CATALINA_HOME/conf/server.xml
+# ADD tomcat/conf/server.xml $CATALINA_HOME/conf/server.xml
+# RUN grep Listener $CATALINA_HOME/conf/server.xml
 RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' 
 RUN cat $CATALINA_HOME/conf/server.xml
 
