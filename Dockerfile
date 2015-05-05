@@ -46,6 +46,16 @@ RUN set -x \
   && rm bin/*.bat \
   && rm tomcat.tar.gz*
 
+RUN mkdir $CATALINA_HOME/shared
+#
+# RUN chmod 777 $CATALINA_HOME 
+# RUN chmod 777 $CATALINA_HOME/conf
+# RUN chmod 777 $CATALINA_HOME/shared
+# RUN chmod 777 $CATALINA_HOME/webapps
+# 
+RUN mkdir -p  /u01/app/oracle/oradata/SOMA
+# RUN chmod 777 /u01/app/oracle/oradata/SOMA
+
 RUN echo 'SOMA_JDBC_USER=soma' >  $CATALINA_HOME/bin/setenv.sh
 RUN echo 'SOMA_JDBC_PASS=soma' >> $CATALINA_HOME/bin/setenv.sh
 RUN echo 'SOMA_JPA_LOG_FILE=$SOMA_HOME/logs/eclipselink.log' >> $CATALINA_HOME/bin/setenv.sh
@@ -59,10 +69,9 @@ RUN mkdir -p $CATALINA_HOME/shared
 # da linha o conteúdo abaixo:
 #     ,"${catalina.base}/shared","${catalina.base}/shared/*.jar"
 # Agora só precisamos copiar o arquivo pro lugar correto
-ADD tomcat/conf/catalina.properties $CATALINA_HOME/conf/catalina.properties
-RUN ls -lat $CATALINA_HOME/conf
-RUN grep common.loader $CATALINA_HOME/conf/catalina.properties
-RUN echo 'É  necessário executar esse contêiner assim : docker run -d -h db-server -v ~/dev/shared:/usr/local/tomcat/shared  ... '
+# ADD tomcat/conf/catalina.properties $CATALINA_HOME/conf/catalina.properties
+# RUN ls -lat $CATALINA_HOME/conf
+# RUN grep common.loader $CATALINA_HOME/conf/catalina.properties
 
 RUN echo '---- ls -lat /bin/start-oracle  ----' 
 RUN ls -lat /bin | head
@@ -97,4 +106,7 @@ EXPOSE 8080
 EXPOSE 1521
 EXPOSE 22
 
+RUN echo 'É  necessário executar esse contêiner assim : docker run -d -h db-server -v ~/dev/shared:/usr/local/tomcat/shared  ... '
+
 CMD ["sh", "/bin/start-xe-and-jee.sh", "Iniciando"]
+
