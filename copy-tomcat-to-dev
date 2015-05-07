@@ -1,5 +1,6 @@
 cd tomcat
 cp conf/* ~/dev/conf/
 cp -R webapps/* ~/dev/webapps/
+cp shared/* ~/dev/shared/
 cd ..
 find ~/dev

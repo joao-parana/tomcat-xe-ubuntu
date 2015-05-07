@@ -5,17 +5,19 @@ FROM parana/web-xe-ubuntu
 MAINTAINER João Antonio Ferreira "joao.parana@gmail.com"
 
 # Install tomcat8
-ENV CATALINA_HOME /usr/local/tomcat
-ENV CATALINA_BASE /usr/local/tomcat
-ENV SOMA_HOME     /usr/local/soma
-ENV ORACLE_HOME   /u01/app/oracle/product/11.2.0/xe
-ENV ORACLE_SID    XE
+ENV CATALINA_HOME     /usr/local/tomcat
+ENV CATALINA_BASE     /usr/local/tomcat
+ENV SOMA_HOME         /usr/local/soma
+ENV SOMA_TBSPACE_DIR  /usr/local/soma/oradata
+ENV ORACLE_HOME       /u01/app/oracle/product/11.2.0/xe
+ENV ORACLE_SID        XE
 
 ENV PATH $SOMA_HOME/bin:$ORACLE_HOME/bin:$CATALINA_HOME/bin:$PATH
 
 RUN mkdir -p "$CATALINA_HOME"
 RUN mkdir -p "$SOMA_HOME"
 RUN mkdir -p "$SOMA_HOME/logs"
+RUN mkdir -p "$SOMA_HOME/setup"
 
 WORKDIR $CATALINA_HOME
 
@@ -53,8 +55,8 @@ RUN mkdir $CATALINA_HOME/shared
 # RUN chmod 777 $CATALINA_HOME/shared
 # RUN chmod 777 $CATALINA_HOME/webapps
 # 
-RUN mkdir -p  /u01/app/oracle/oradata/SOMA
-# RUN chmod 777 /u01/app/oracle/oradata/SOMA
+RUN mkdir -p  $SOMA_TBSPACE_DIR
+# RUN chmod 777 $SOMA_TBSPACE_DIR
 
 RUN echo 'SOMA_JDBC_USER=soma' >  $CATALINA_HOME/bin/setenv.sh
 RUN echo 'SOMA_JDBC_PASS=soma' >> $CATALINA_HOME/bin/setenv.sh
@@ -100,6 +102,8 @@ RUN sed -i -E "s/8080/1443/g" $CATALINA_HOME/conf/server.xml
 # RUN grep Listener $CATALINA_HOME/conf/server.xml
 RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' 
 RUN cat $CATALINA_HOME/conf/server.xml
+
+ADD db-provision.sh $SOMA_HOME/setup/db-provision.sh
 
 EXPOSE 1443
 EXPOSE 8080
