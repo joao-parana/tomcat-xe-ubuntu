@@ -1,6 +1,20 @@
 cd tomcat
+mkdir ~/dev/conf 2> /dev/null
+mkdir ~/dev/shared 2> /dev/null
+mkdir ~/dev/webapps 2> /dev/null
 cp conf/* ~/dev/conf/
+cp conf/server.xml-original ~/dev/conf/server.xml
 cp -R webapps/* ~/dev/webapps/
 cp shared/* ~/dev/shared/
+#
 cd ..
 find ~/dev
+grep SomaLifeCycleListener ~/dev/conf/server.xml
+grep Realm ~/dev/conf/server.xml
+#
+echo 'Para executar o Contêiner use o coamando abaixo'
+echo ' docker run -d -h db-server \'
+echo '    -v ~/dev/shared:/usr/local/tomcat/shared \'
+echo '    -p 1443:1443 -p 4422:22 -p 1521:1521 -p 8080:8080 \'
+echo '    --name mytomcat parana/tomcat-xe-ubuntu'
+echo ' '
