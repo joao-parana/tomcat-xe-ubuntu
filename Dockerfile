@@ -19,6 +19,11 @@ RUN mkdir -p "$SOMA_HOME"
 RUN mkdir -p "$SOMA_HOME/logs"
 RUN mkdir -p "$SOMA_HOME/setup"
 
+# Tablespace Directory needs special privileges  
+RUN mkdir -p  $SOMA_TBSPACE_DIR
+RUN chown root:dba $SOMA_TBSPACE_DIR
+RUN chmod 775 $SOMA_TBSPACE_DIR
+
 WORKDIR $CATALINA_HOME
 
 # see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
@@ -55,8 +60,6 @@ RUN mkdir $CATALINA_HOME/shared
 # RUN chmod 777 $CATALINA_HOME/shared
 # RUN chmod 777 $CATALINA_HOME/webapps
 # 
-RUN mkdir -p  $SOMA_TBSPACE_DIR
-# RUN chmod 777 $SOMA_TBSPACE_DIR
 
 RUN echo 'SOMA_JDBC_USER=soma' >  $CATALINA_HOME/bin/setenv.sh
 RUN echo 'SOMA_JDBC_PASS=soma' >> $CATALINA_HOME/bin/setenv.sh

@@ -13,7 +13,9 @@ find ~/dev
 grep SomaLifeCycleListener ~/dev/conf/server.xml
 grep Realm ~/dev/conf/server.xml
 #
-echo 'Para executar o Contêiner use o coamando abaixo'
+echo ' '
+echo 'Para executar o Contêiner use o comando abaixo :'
+echo ' '
 echo ' docker run -d -h db-server \'
 echo '    -v ~/dev/shared:/usr/local/tomcat/shared \'
 echo '    -v ~/dev/conf:/usr/local/tomcat/conf \'
@@ -21,3 +23,7 @@ echo '    -v ~/dev/webapps:/usr/local/tomcat/webapps \'
 echo '    -p 1443:1443 -p 4422:22 -p 1521:1521 -p 8080:8080 \'
 echo '    --name mytomcat parana/tomcat-xe-ubuntu'
 echo ' '
+echo 'Depois que o contêiner estiver UP, para ver o Log do Tomcat execute : '
+echo ' '
+echo ' docker exec mytomcat cat /usr/local/tomcat/logs/catalina.out'
+
