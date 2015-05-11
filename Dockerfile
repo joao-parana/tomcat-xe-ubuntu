@@ -14,15 +14,15 @@ ENV ORACLE_SID        XE
 
 ENV PATH $SOMA_HOME/bin:$ORACLE_HOME/bin:$CATALINA_HOME/bin:$PATH
 
-RUN mkdir -p "$CATALINA_HOME"
-RUN mkdir -p "$SOMA_HOME"
-RUN mkdir -p "$SOMA_HOME/logs"
-RUN mkdir -p "$SOMA_HOME/setup"
+RUN mkdir -p "$CATALINA_HOME" && \
+    mkdir -p "$SOMA_HOME" && \
+    mkdir -p "$SOMA_HOME/logs" && \
+    mkdir -p "$SOMA_HOME/setup"
 
 # Tablespace Directory needs special privileges  
-RUN mkdir -p  $SOMA_TBSPACE_DIR
-RUN chown root:dba $SOMA_TBSPACE_DIR
-RUN chmod 775 $SOMA_TBSPACE_DIR
+RUN mkdir -p  $SOMA_TBSPACE_DIR && \
+      chown root:dba $SOMA_TBSPACE_DIR && \
+      chmod 775 $SOMA_TBSPACE_DIR
 
 WORKDIR $CATALINA_HOME
 
@@ -61,14 +61,14 @@ RUN mkdir $CATALINA_HOME/shared
 # RUN chmod 777 $CATALINA_HOME/webapps
 # 
 
-RUN echo 'SOMA_JDBC_USER=soma' >  $CATALINA_HOME/bin/setenv.sh
-RUN echo 'SOMA_JDBC_PASS=soma' >> $CATALINA_HOME/bin/setenv.sh
-RUN echo 'SOMA_JPA_LOG_FILE=$SOMA_HOME/logs/eclipselink.log' >> $CATALINA_HOME/bin/setenv.sh
-RUN echo '#' >> $CATALINA_HOME/bin/setenv.sh
-RUN echo '- - - - - - - - - - - - - -- - - - ' 
-RUN cat  $CATALINA_HOME/bin/setenv.sh
-RUN chmod a+rx $CATALINA_HOME/bin/setenv.sh
-RUN mkdir -p $CATALINA_HOME/shared
+RUN echo 'SOMA_JDBC_USER=soma' >  $CATALINA_HOME/bin/setenv.sh && \
+    echo 'SOMA_JDBC_PASS=soma' >> $CATALINA_HOME/bin/setenv.sh && \
+    echo 'SOMA_JPA_LOG_FILE=$SOMA_HOME/logs/eclipselink.log' >> $CATALINA_HOME/bin/setenv.sh && \
+    echo '#' >> $CATALINA_HOME/bin/setenv.sh && \
+    echo '- - - - - - - - - - - - - -- - - - '  && \
+    cat  $CATALINA_HOME/bin/setenv.sh && \
+    chmod a+rx $CATALINA_HOME/bin/setenv.sh && \
+    mkdir -p $CATALINA_HOME/shared
 
 # catalina.properties : na propriedade "common.loader" foi incluido no final 
 # da linha o conteúdo abaixo:
@@ -78,42 +78,52 @@ RUN mkdir -p $CATALINA_HOME/shared
 # RUN ls -lat $CATALINA_HOME/conf
 # RUN grep common.loader $CATALINA_HOME/conf/catalina.properties
 
-RUN echo '---- ls -lat /bin/start-oracle  ----' 
-RUN ls -lat /bin | head
-RUN echo '---- cat /bin/start-oracle  ----' 
-RUN cat /bin/start-oracle
-RUN echo '--------------------------------'
-RUN echo '---- building start-oracle shell   ----' 
-# doing : CMD ["catalina.sh", "run"]
-RUN echo "#" > /bin/start-xe-and-jee.sh
-RUN echo "#" >> /bin/start-xe-and-jee.sh
-RUN echo "#" >> /bin/start-xe-and-jee.sh
-RUN echo "echo I am going to RUN Tomcat 8 Application" >> /bin/start-xe-and-jee.sh
-RUN echo 'echo `pwd` ' >> /bin/start-xe-and-jee.sh
-RUN echo "echo Starting Tomcat 8" >> /bin/start-xe-and-jee.sh
-RUN echo 'catalina.sh start' >> /bin/start-xe-and-jee.sh
-RUN echo '/bin/start-oracle' >> /bin/start-xe-and-jee.sh
-# RUN echo 'sleep 15' >> /bin/start-xe-and-jee.sh
-# RUN echo 'echo "$1 $2 $3 $4 $5" >> $SOMA_HOME/logs/soma.log' >> /bin/start-xe-and-jee.sh
-RUN chmod 777 /bin/start-xe-and-jee.sh
-RUN echo '---- cat /bin/start-xe-and-jee.sh  ----' 
-RUN cat /bin/start-xe-and-jee.sh
+RUN echo '---- ls -lat /bin/start-oracle  ----' && \ 
+    ls -lat /bin | head && \
+    echo '---- cat /bin/start-oracle  ----'  && \
+    cat /bin/start-oracle && \
+    echo '--------------------------------' && \
+    echo '---- building start-oracle shell   ----'  && \
+    # doing : CMD ["catalina.sh", "run"] && \
+    echo "#" > /bin/start-xe-and-jee.sh && \
+    echo "#" >> /bin/start-xe-and-jee.sh && \
+    echo "#" >> /bin/start-xe-and-jee.sh && \
+    echo "echo I am going to RUN Tomcat 8 Application" >> /bin/start-xe-and-jee.sh && \
+    echo 'echo `pwd` ' >> /bin/start-xe-and-jee.sh && \
+    echo "echo Starting Tomcat 8" >> /bin/start-xe-and-jee.sh && \
+    echo 'catalina.sh start' >> /bin/start-xe-and-jee.sh && \
+    echo '/bin/start-oracle' >> /bin/start-xe-and-jee.sh && \
+    # RUN echo 'sleep 15' >> /bin/start-xe-and-jee.sh && \
+    # RUN echo 'echo "$1 $2 $3 $4 $5" >> $SOMA_HOME/logs/soma.log' >> /bin/start-xe-and-jee.sh && \
+    chmod 777 /bin/start-xe-and-jee.sh && \
+    echo '---- cat /bin/start-xe-and-jee.sh  ----'  && \
+    cat /bin/start-xe-and-jee.sh
 
 # Tomcat 8 Default port 8080 conflits with Apex
 RUN sed -i -E "s/8080/1443/g" $CATALINA_HOME/conf/server.xml
 # ADD tomcat/conf/server.xml $CATALINA_HOME/conf/server.xml
 # RUN grep Listener $CATALINA_HOME/conf/server.xml
-RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' 
-RUN cat $CATALINA_HOME/conf/server.xml
+RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' && \
+    cat $CATALINA_HOME/conf/server.xml
 
 ADD db-provision.sh $SOMA_HOME/setup/db-provision.sh
+WORKDIR $SOMA_HOME/setup
+RUN $SOMA_HOME/setup/db-provision.sh 
 
+WORKDIR $CATALINA_HOME
 EXPOSE 1443
 EXPOSE 8080
 EXPOSE 1521
 EXPOSE 22
 
-RUN echo 'É  necessário executar esse contêiner assim : docker run -d -h db-server -v ~/dev/shared:/usr/local/tomcat/shared  ... '
+RUN echo 'É  necessário executar esse contêiner assim : docker run -d -h db-server -v ~/dev/shared:/usr/local/tomcat/shared  ... ' && \
+    echo '' && \
+    echo '*** ATENÇÃO: Na primeira vez que executar este contêiner execute o comando abaixo após o Oracle estar UP ' && \
+    echo 'docker exec  mytomcat sqlplus sys/oracle@XE as sysdba @/usr/local/soma/setup/ora-01.sql' && \
+    echo '# Estamos supondo o nome do contêiner igual a mytomcat' && \
+    echo '***' && \
+    echo 'NÃO ESQUEÇA DE TROCAR A SENHA DO USER SYS E SYSTEM !' && \
+    echo '***' 
 
 CMD ["sh", "/bin/start-xe-and-jee.sh", "Iniciando"]
 

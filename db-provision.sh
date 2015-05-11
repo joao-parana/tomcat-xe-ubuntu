@@ -27,5 +27,3 @@ echo "; " >> ora-01.sql
 echo "-- " >> ora-01.sql
 echo "-- concedendo privilégios ao usuario " >> ora-01.sql
 echo "grant connect, create session, resource, dba to soma; " >> ora-01.sql
-echo exit | sqlplus sys/senha-do-sys@XE as sysdba @ora-01.sql >> ora.log 2>> ora.log
-

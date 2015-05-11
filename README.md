@@ -22,14 +22,27 @@ docker-ip() {
 ```
 
 Run as a daemon with 1443, 8080, 22 and 1521 ports opened and mapped, 
-setting the hostname to db-server and sharing 3 volumes, use the command:
+setting the hostname to db-server and sharing 1 volume, use the command:
 
 ```
 mkdir -p  ~/dev/shared
-docker run -d -h db-server -v ~/dev/shared:/usr/local/tomcat/shared 
+docker run -d -h db-server -v ~/dev/shared:/usr/local/tomcat/shared  \
        -p 1443:1443 -p 4422:22 -p 1521:1521 -p 8080:8080  \
        --name mytomcat parana/tomcat-xe-ubuntu
 ```
+
+The same, but sharing 3 volumes, use the command:
+```
+docker run -d -h db-server \
+    -v ~/dev/shared:/usr/local/tomcat/shared \
+    -v ~/dev/conf:/usr/local/tomcat/conf \
+    -v ~/dev/webapps:/usr/local/tomcat/webapps \
+    -p 1443:1443 -p 4422:22 -p 1521:1521 -p 8080:8080 \
+    --name mytomcat parana/tomcat-xe-ubuntu
+```
+
+Is this case you need to prepare `~/dev` directory first.
+
 
 Connect database with following setting:
 

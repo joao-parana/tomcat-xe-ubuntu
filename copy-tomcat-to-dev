@@ -9,7 +9,8 @@ cp -R webapps/* ~/dev/webapps/
 cp shared/*.jar ~/dev/shared/
 #
 cd ..
-find ~/dev
+ls -la ~/dev
+ls -la ~/dev/webapps
 grep SomaLifeCycleListener ~/dev/conf/server.xml
 grep Realm ~/dev/conf/server.xml
 #
