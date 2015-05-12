@@ -111,8 +111,8 @@ WORKDIR $SOMA_HOME/setup
 RUN $SOMA_HOME/setup/db-provision.sh 
 
 ADD hosts-provision.sh $SOMA_HOME/setup/hosts-provision.sh
-WORKDIR $SOMA_HOME/setup
-RUN $SOMA_HOME/setup/hosts-provision.sh 
+#WORKDIR $SOMA_HOME/setup
+#RUN $SOMA_HOME/setup/hosts-provision.sh 
 
 WORKDIR $CATALINA_HOME
 # LCDS RTMP channel
