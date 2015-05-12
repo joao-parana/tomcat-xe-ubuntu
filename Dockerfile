@@ -110,10 +110,20 @@ ADD db-provision.sh $SOMA_HOME/setup/db-provision.sh
 WORKDIR $SOMA_HOME/setup
 RUN $SOMA_HOME/setup/db-provision.sh 
 
+ADD hosts-provision.sh $SOMA_HOME/setup/hosts-provision.sh
+WORKDIR $SOMA_HOME/setup
+RUN $SOMA_HOME/setup/hosts-provision.sh 
+
 WORKDIR $CATALINA_HOME
+# LCDS RTMP channel
+EXPOSE 2037
+# Tomcat webservice
 EXPOSE 1443
+# APEX
 EXPOSE 8080
+# Oracle DB
 EXPOSE 1521
+# SSH
 EXPOSE 22
 
 RUN echo 'É  necessário executar esse contêiner assim : docker run -d -h db-server -v ~/dev/shared:/usr/local/tomcat/shared  ... ' && \
