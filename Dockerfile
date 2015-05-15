@@ -55,29 +55,6 @@ RUN set -x \
   && rm tomcat.tar.gz*
 
 RUN mkdir $CATALINA_HOME/shared
-#
-# RUN chmod 777 $CATALINA_HOME 
-# RUN chmod 777 $CATALINA_HOME/conf
-# RUN chmod 777 $CATALINA_HOME/shared
-# RUN chmod 777 $CATALINA_HOME/webapps
-# 
-
-RUN echo 'SOMA_JDBC_USER=soma' >  $CATALINA_HOME/bin/setenv.sh && \
-    echo 'SOMA_JDBC_PASS=soma' >> $CATALINA_HOME/bin/setenv.sh && \
-    echo 'SOMA_JPA_LOG_FILE=$SOMA_HOME/logs/eclipselink.log' >> $CATALINA_HOME/bin/setenv.sh && \
-    echo '#' >> $CATALINA_HOME/bin/setenv.sh && \
-    echo '- - - - - - - - - - - - - -- - - - '  && \
-    cat  $CATALINA_HOME/bin/setenv.sh && \
-    chmod a+rx $CATALINA_HOME/bin/setenv.sh && \
-    mkdir -p $CATALINA_HOME/shared
-
-# catalina.properties : na propriedade "common.loader" foi incluido no final 
-# da linha o conteúdo abaixo:
-#     ,"${catalina.base}/shared","${catalina.base}/shared/*.jar"
-# Agora só precisamos copiar o arquivo pro lugar correto
-# ADD tomcat/conf/catalina.properties $CATALINA_HOME/conf/catalina.properties
-# RUN ls -lat $CATALINA_HOME/conf
-# RUN grep common.loader $CATALINA_HOME/conf/catalina.properties
 
 RUN echo '---- ls -lat /bin/start-oracle  ----' && \ 
     ls -lat /bin | head && \
@@ -110,10 +87,6 @@ RUN echo '---- cat $CATALINA_HOME/conf/server.xml  ----' && \
 ADD db-provision.sh $SOMA_HOME/setup/db-provision.sh
 WORKDIR $SOMA_HOME/setup
 RUN $SOMA_HOME/setup/db-provision.sh 
-
-ADD hosts-provision.sh $SOMA_HOME/setup/hosts-provision.sh
-#WORKDIR $SOMA_HOME/setup
-#RUN $SOMA_HOME/setup/hosts-provision.sh 
 
 WORKDIR $CATALINA_HOME
 # LCDS RTMP channel
