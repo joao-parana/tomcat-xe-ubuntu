@@ -54,6 +54,19 @@ RUN set -x \
   && rm bin/*.bat \
   && rm tomcat.tar.gz*
 
+# Update distro and install some packages
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install curl -y && \
+    apt-get install supervisor -y && \
+    apt-get install logrotate -y && \
+    apt-get install locales -y && \
+    update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
+    locale-gen en_US.UTF-8 && \
+    dpkg-reconfigure locales && \
+    rm -rf /var/lib/apt/lists/*
+
+
 RUN mkdir $CATALINA_HOME/shared
 
 RUN echo '---- ls -lat /bin/start-oracle  ----' && \ 
