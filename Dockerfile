@@ -57,6 +57,7 @@ RUN set -x \
 # Update distro and install some packages
 RUN apt-get update && \
     apt-get upgrade -y && \
+    apt-get install lsof && \
     apt-get install curl -y && \
     apt-get install supervisor -y && \
     apt-get install logrotate -y && \
