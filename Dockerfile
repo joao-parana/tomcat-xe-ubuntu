@@ -123,5 +123,7 @@ RUN echo 'É  necessário executar esse contêiner assim : docker run -d -h db-s
     echo 'NÃO ESQUEÇA DE TROCAR A SENHA DO USER SYS E SYSTEM !' && \
     echo '***' 
 
+RUN echo "Europe/London" > /etc/timezone
+
 CMD ["sh", "/bin/start-xe-and-jee.sh", "Iniciando"]
 
